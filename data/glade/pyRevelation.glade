@@ -20,7 +20,7 @@
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Datei</property>
+                <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">
@@ -33,6 +33,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="menu_file_new" swapped="no"/>
                         <accelerator key="n" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -43,6 +44,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="menu_file_open" swapped="no"/>
                         <accelerator key="o" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -59,6 +61,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="menu_file_save" swapped="no"/>
                         <accelerator key="s" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -69,6 +72,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="menu_file_save_as" swapped="no"/>
                         <accelerator key="s" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -84,6 +88,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">file-change-password</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="menu_file_change_password" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -92,6 +97,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">file-lock</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="menu_file_lock" swapped="no"/>
                         <accelerator key="l" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -106,6 +112,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">file-import</property>
+                        <signal name="activate" handler="menu_file_import" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -114,6 +121,7 @@
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">file-export</property>
                         <property name="use_underline">True</property>
+                        <signal name="activate" handler="menu_file_export" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -129,6 +137,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="menu_file_close" swapped="no"/>
                         <accelerator key="w" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -139,6 +148,7 @@
                         <property name="can_focus">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <signal name="activate" handler="menu_quit" swapped="no"/>
                         <accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
@@ -150,7 +160,7 @@
               <object class="GtkMenuItem" id="menuitem2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Bearbeiten</property>
+                <property name="label" translatable="yes">_Edit</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu2">
@@ -301,7 +311,8 @@
               <object class="GtkMenuItem" id="menu-entry">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">menu-entry</property>
+                <property name="label" translatable="yes">E_ntry</property>
+                <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu4">
                     <property name="visible">True</property>
@@ -368,7 +379,7 @@
               <object class="GtkMenuItem" id="menuitem3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Ansicht</property>
+                <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu5">
@@ -438,7 +449,7 @@
               <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">_Hilfe</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu3">
@@ -475,7 +486,7 @@
                 <property name="tooltip_text" translatable="yes">opens a revelation file</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-open</property>
-                <signal name="clicked" handler="do_clicked" swapped="no"/>
+                <signal name="clicked" handler="toolbar_file_open" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -490,6 +501,7 @@
                 <property name="is_important">True</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-save</property>
+                <signal name="clicked" handler="toolbar_file_save" swapped="no"/>
                 <accelerator key="s" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
               </object>
               <packing>
@@ -514,6 +526,7 @@
                 <property name="is_important">True</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-add</property>
+                <signal name="clicked" handler="toolbar_entry_add" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -526,6 +539,7 @@
                 <property name="can_focus">False</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-directory</property>
+                <signal name="clicked" handler="toolbar_entry_directory" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -549,6 +563,7 @@
                 <property name="is_important">True</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-jump-to</property>
+                <signal name="clicked" handler="toolbar_entry_goto" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -561,6 +576,7 @@
                 <property name="can_focus">False</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-edit</property>
+                <signal name="clicked" handler="toolbar_entry_edit" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -573,6 +589,7 @@
                 <property name="can_focus">False</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-delete</property>
+                <signal name="clicked" handler="toolbar_entry_remove" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

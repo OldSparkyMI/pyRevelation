@@ -28,6 +28,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from src.handler.SignalHandler import SignalHandler
 from gettext import gettext as _
+from src.dialog import dialog
 import sys
 
 
@@ -60,38 +61,43 @@ class PyRevelationApplication(Gtk.Application):
     def do_startup(self):
         Gtk.Application.do_startup(self)
 
-    def file_open(self):
-        print("file_open")
-        dialog = Gtk.FileChooserDialog(_("Please choose a folder"), self.window,
-                                       Gtk.FileChooserAction.SELECT_FOLDER,
-                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                        "Select", Gtk.ResponseType.OK))
-        dialog.set_default_size(800, 400)
+    def file_open(self, file = None, password = None):
+        """Opens a data file"""
 
-        response = dialog.run()
-        if response == Gtk.ResponseType.OK:
-            print("Select clicked")
-            print("Folder selected: " + dialog.get_filename())
-        elif response == Gtk.ResponseType.CANCEL:
-            print("Cancel clicked")
+        try:
+            if self.entrystore.changed and dialog.FileChangesOpen(self).run():
+                if not self.file_save(self.datafile.get_file(), self.datafile.get_password()):
+                    raise dialog.CancelError
 
-        dialog.destroy()
+            if file is None:
+                open_file_selector_dialog = dialog.OpenFileSelector(self)
+                response = open_file_selector_dialog.run()
+                if response == Gtk.ResponseType.OK:
+                    file = dialog.get_filename()
+                elif response == Gtk.ResponseType.CANCEL:
+                    pass
+                open_file_selector_dialog.destroy()
 
-    # def add_filters(self, dialog):
-    #     filter_text = Gtk.FileFilter()
-    #     filter_text.set_name("Text files")
-    #     filter_text.add_mime_type("text/plain")
-    #     dialog.add_filter(filter_text)
-    #
-    #     filter_py = Gtk.FileFilter()
-    #     filter_py.set_name("Python files")
-    #     filter_py.add_mime_type("text/x-python")
-    #     dialog.add_filter(filter_py)
-    #
-    #     filter_any = Gtk.FileFilter()
-    #     filter_any.set_name("Any files")
-    #     filter_any.add_pattern("*")
-    #     dialog.add_filter(filter_any)
+            entrystore = self.__file_load(file, password)
+
+            if entrystore is None:
+                return
+
+            self.entrystore.clear()
+            self.entrystore.import_entry(entrystore, None)
+            self.entrystore.changed = False
+            self.undoqueue.clear()
+
+            self.file_locked = False;
+            self.statusbar.set_status(_('Opened file %s') % self.datafile.get_file())
+
+        except dialog.CancelError:
+            self.statusbar.set_status(_('Open cancelled'))
+
+    def __file_load(self, file, password, datafile=None):
+        """Loads data from a data file into an entrystore"""
+        print("Implement me: __file_load")
+        return None
 
 
 if __name__ == "__main__":

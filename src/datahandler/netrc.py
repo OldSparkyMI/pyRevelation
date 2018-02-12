@@ -1,0 +1,143 @@
+#
+# Revelation - a password manager for GNOME
+# https://github.com/OldSparkyMI/pyRevelation
+# $Id$
+#
+# Copyright (c) 2018 Maik Igloffstein
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+#
+# Module for handling .netrc files
+#
+
+
+from src.datahandler import base
+from src import data, entry
+
+import shlex
+import time
+from io import StringIO
+
+
+class NetRC(base.DataHandler):
+    """Data handler for .netrc data"""
+
+    name = "netrc"
+    importer = True
+    exporter = True
+    encryption = False
+
+    def export_data(self, entrystore, password=None):
+        """Converts data from an entrystore to netrc data"""
+
+        netrc = ""
+        iter = entrystore.iter_nth_child(None, 0)
+
+        while iter is not None:
+            e = entrystore.get_entry(iter)
+
+            try:
+                if "" in (e[entry.HostnameField], e[entry.UsernameField], e[entry.PasswordField]):
+                    raise ValueError
+
+                if e.name != "":
+                    netrc += "# %s\n" % e.name
+
+                if e.description != "":
+                    netrc += "# %s\n" % e.description
+
+                netrc += "machine %s\n" % e[entry.HostnameField]
+                netrc += "	login %s\n" % e[entry.UsernameField]
+                netrc += "	password %s\n" % e[entry.PasswordField]
+                netrc += "\n"
+
+            except (entry.EntryFieldError, ValueError):
+                pass
+
+            iter = entrystore.iter_traverse_next(iter)
+
+        return netrc
+
+    def import_data(self, netrc, password=None):
+        """Imports data from a netrc stream to an entrystore"""
+
+        entrystore = data.EntryStore()
+
+        # set up a lexical parser
+        datafp = StringIO.StringIO(netrc)
+        lexer = shlex.shlex(datafp)
+        lexer.wordchars += r"!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+
+        while 1:
+            # look for a machine, default or macdef top-level keyword
+            tt = lexer.get_token()
+
+            if not tt:
+                break
+
+            elif tt == "machine":
+                name = lexer.get_token()
+
+            elif tt == "default":
+                name = "default"
+
+            # skip macdef entries
+            elif tt == "macdef":
+                lexer.whitespace = ' \t'
+
+                while 1:
+                    line = lexer.instream.readline()
+
+                    if not line or line == '\012':
+                        lexer.whitespace = ' \t\r\n'
+                        break
+                continue
+
+            else:
+                raise base.FormatError
+
+            # we're looking at an entry, so fetch data
+            e = entry.GenericEntry()
+            e.name = name
+            e.updated = time.time()
+
+            if name != "default":
+                e[entry.HostnameField] = name
+
+            while 1:
+                tt = lexer.get_token()
+
+                # if we find a new entry, break out of current field-collecting loop
+                if tt == "" or tt == "machine" or tt == "default" or tt == "macdef":
+                    entrystore.add_entry(e)
+                    lexer.push_token(tt)
+                    break
+
+                elif tt == "login" or tt == "user":
+                    e[entry.UsernameField] = lexer.get_token()
+
+                elif tt == "account":
+                    lexer.get_token()
+
+                elif tt == "password":
+                    e[entry.PasswordField] = lexer.get_token()
+
+                else:
+                    raise base.FormatError
+
+        datafp.close()
+
+        return entrystore

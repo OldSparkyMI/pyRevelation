@@ -20,3 +20,5 @@ pip3 install
 - PyGObject
 - cracklib
 - gi
+- gobject
+- Crypto

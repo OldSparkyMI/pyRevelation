@@ -24,12 +24,17 @@
 # Module for handling Figaro's Password Manager data
 #
 
-from src.datahandler import base
-from src.lib import data, entry, util
-import math, random, string, xml.dom.minidom
+import math
+import random
+import string
+import xml.dom.minidom
 from xml.parsers.expat import ExpatError
+
 from Crypto.Cipher import Blowfish
 from Crypto.Hash import MD5
+
+from src.datahandler import base
+from src.lib import data, entry, util
 
 
 class FPM(base.DataHandler):

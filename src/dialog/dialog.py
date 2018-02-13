@@ -24,6 +24,7 @@ import gi
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+from src.lib import ui
 from gettext import gettext as _
 
 

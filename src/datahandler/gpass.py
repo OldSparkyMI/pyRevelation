@@ -24,12 +24,13 @@
 # Module for handling GPass data
 #
 
-import base
-from revelation import data, entry
+import locale
+import re
 
-import locale, re
+from src.datahandler import base
 from Crypto.Cipher import Blowfish
 from Crypto.Hash import SHA
+from src.lib import data, entry
 
 IV = "\x05\x17\x01\x7b\x0c\x03\x36\x5e"
 

@@ -26,7 +26,7 @@
 import gettext
 import time
 
-from src import config, entry
+from src.lib import config, entry
 from src.datahandler import base
 
 _ = gettext.gettext

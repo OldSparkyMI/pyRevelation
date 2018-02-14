@@ -24,8 +24,8 @@
 # Module for handling PasswordSafe data
 #
 
-import base
-from revelation import data, entry, util
+from src.datahandler import base
+from src.lib import data, entry, util
 
 import locale, re, struct
 from Crypto.Cipher import Blowfish

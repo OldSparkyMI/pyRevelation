@@ -34,10 +34,10 @@ from io import StringIO
 from xml.parsers.expat import ExpatError
 
 from Crypto.Cipher import AES
-from src.PBKDF2 import PBKDF2
+from src.lib import PBKDF2
 from src.bundle import luks
 
-from src import config, data, entry
+from src.lib import config, data, entry
 from src.datahandler import base
 from src.lib import util
 

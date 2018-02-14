@@ -24,7 +24,7 @@
 #
 from src.datahandler import base
 # ToDo: data is not used?
-from src import data, entry
+from src.lib import data, entry
 
 import time
 import csv

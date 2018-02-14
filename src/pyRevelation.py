@@ -29,6 +29,11 @@ from gi.repository import Gtk
 from src.handler.SignalHandler import SignalHandler
 from gettext import gettext as _
 from src.dialog import dialog
+from src.lib import data
+from src.lib import config
+from src.lib import io
+from src import datahandler
+from src.lib import ui
 import sys
 
 
@@ -42,7 +47,43 @@ class PyRevelationApplication(Gtk.Application):
 
     # constructor of the Gtk Application
     def __init__(self):
+        self.__init_facilities()
         Gtk.Application.__init__(self)
+
+    def __init_facilities(self):
+        "Sets up various facilities"
+
+        self.clipboard = data.Clipboard()
+        self.config = config.Config()
+        self.datafile = io.DataFile(datahandler.Revelation2)
+        self.entryclipboard = data.EntryClipboard()
+        self.entrystore = data.EntryStore()
+        self.entrysearch = data.EntrySearch(self.entrystore)
+        self.items = ui.ItemFactory(self)
+        self.locktimer = data.Timer()
+        self.undoqueue = data.UndoQueue()
+
+        self.datafile.connect("changed", lambda w, f: self.__state_file(f))
+        self.datafile.connect("content-changed", self.__cb_file_content_changed)
+        self.entryclipboard.connect("content-toggled", lambda w, d: self.__state_clipboard(d))
+        self.locktimer.connect("ring", self.__cb_file_autolock)
+        self.undoqueue.connect("changed", lambda w: self.__state_undo(self.undoqueue.get_undo_action(),
+                                                                      self.undoqueue.get_redo_action()))
+
+        # check if configuration is updated, install schema if not
+        if self.__check_config() == False:
+
+            if config.install_schema("%s/revelation.schemas" % config.DIR_GCONFSCHEMAS) == False:
+                raise config.ConfigError
+
+            self.config.client.clear_cache()
+
+            if self.__check_config() == False:
+                raise config.ConfigError
+
+        self.config.monitor("file/autolock_timeout", lambda k, v, d: self.locktimer.start(v * 60))
+
+        dialog.EVENT_FILTER = self.__cb_event_filter
 
     # loads the glade file
     def do_activate(self):

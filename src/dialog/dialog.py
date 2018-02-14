@@ -72,7 +72,7 @@ class Message(Gtk.Window):
 class Warning(Message):
     """Displays a warning message"""
 
-    def __init__(self, parent, title, text, buttons=((Gtk.STOCK_OK, Gtk.RESPONSE_OK),), default=None):
+    def __init__(self, parent, title, text, buttons=((Gtk.STOCK_OK, Gtk.ResponseType.OK),), default=None):
         Message.__init__(self, parent, title, text, ui.STOCK_WARNING, buttons, default)
 
 
@@ -82,8 +82,8 @@ class FileChanges(Warning):
     def __init__(self, parent, title, text):
         Warning.__init__(
             self, parent, title, text,
-            ((ui.STOCK_DISCARD, Gtk.RESPONSE_ACCEPT), (Gtk.STOCK_CANCEL, Gtk.RESPONSE_CANCEL),
-             (Gtk.STOCK_SAVE, Gtk.RESPONSE_OK))
+            ((ui.STOCK_DISCARD, Gtk.RESPONSE_ACCEPT), (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL),
+             (Gtk.STOCK_SAVE, Gtk.ResponseType.OK))
         )
 
     def run(self):
@@ -91,13 +91,13 @@ class FileChanges(Warning):
 
         response = Warning.run(self)
 
-        if response == Gtk.RESPONSE_OK:
+        if response == Gtk.ResponseType.OK:
             return True
 
         elif response == Gtk.RESPONSE_ACCEPT:
             return False
 
-        elif response in (Gtk.RESPONSE_CANCEL, Gtk.RESPONSE_CLOSE):
+        elif response in (Gtk.ResponseType.CANCEL, Gtk.RESPONSE_CLOSE):
             raise CancelError
 
 

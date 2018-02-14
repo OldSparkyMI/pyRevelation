@@ -25,7 +25,7 @@
 
 
 from src.datahandler import base
-from src import data, entry
+from src.lib import data, entry
 
 import shlex
 import time

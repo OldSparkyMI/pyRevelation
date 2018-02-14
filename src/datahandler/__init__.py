@@ -25,15 +25,15 @@
 
 from src.datahandler.base import Error, DataError, FormatError, PasswordError, VersionError
 
-from src.datahandler.base.csvfile import CSV
-from src.datahandler.base.fpm import FPM
-from src.datahandler.base.gpass import GPass04, GPass05
-from src.datahandler.base.netrc import NetRC
-from src.datahandler.base.pwsafe import PasswordSafe1, PasswordSafe2, MyPasswordSafe, MyPasswordSafeOld, PasswordGorilla
-from src.datahandler.base.rvl import RevelationXML, Revelation, Revelation2, RevelationLUKS
-from src.datahandler.base.splashid import SplashIDCSV
-from src.datahandler.base.text import PlainText
-from src.datahandler.base.xhtml import XHTML
+from src.datahandler.csvfile import CSV
+from src.datahandler.fpm import FPM
+from src.datahandler.gpass import GPass04, GPass05
+from src.datahandler.netrc import NetRC
+from src.datahandler.pwsafe import PasswordSafe1, PasswordSafe2, MyPasswordSafe, MyPasswordSafeOld, PasswordGorilla
+from src.datahandler.rvl import RevelationXML, Revelation, Revelation2, RevelationLUKS
+from src.datahandler.splashid import SplashIDCSV
+from src.datahandler.text import PlainText
+from src.datahandler.xhtml import XHTML
 
 HANDLERS = [
     CSV,

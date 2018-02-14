@@ -23,10 +23,11 @@
 # Module for importing data from CSV files.
 #
 
-import csv, time
+import csv
+import time
 
-import base
-from revelation import data, entry
+from src.datahandler import base
+from src.lib import data, entry
 
 
 class SplashIDCSV(base.DataHandler):

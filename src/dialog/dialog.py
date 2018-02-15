@@ -115,11 +115,10 @@ class FileChangesOpen(FileChanges):
 class OpenFileSelector(Gtk.FileChooserDialog):
     """A file selector for opening files"""
 
-    def __init__(self):
-        Gtk.FileChooserDialog.__init__(_("Please choose a revelation file"), self.window,
-                                       Gtk.FileChooserAction.SELECT_FOLDER,
-                                       (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-                                        "Select", Gtk.ResponseType.OK))
+    def __init__(self, window):
+        super().__init__(title=_("Please choose a revelation file"), parent=window, action=Gtk.FileChooserAction.OPEN)
+        self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
+
         self.set_default_size(800, 400)
 
         filter_text = Gtk.FileFilter()

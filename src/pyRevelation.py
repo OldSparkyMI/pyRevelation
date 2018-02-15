@@ -51,7 +51,7 @@ class PyRevelationApplication(Gtk.Application):
         Gtk.Application.__init__(self)
 
     def __init_facilities(self):
-        "Sets up various facilities"
+        """Sets up various facilities"""
 
         self.clipboard = data.Clipboard()
         self.config = config.Config()
@@ -63,27 +63,28 @@ class PyRevelationApplication(Gtk.Application):
         self.locktimer = data.Timer()
         self.undoqueue = data.UndoQueue()
 
-        self.datafile.connect("changed", lambda w, f: self.__state_file(f))
-        self.datafile.connect("content-changed", self.__cb_file_content_changed)
-        self.entryclipboard.connect("content-toggled", lambda w, d: self.__state_clipboard(d))
-        self.locktimer.connect("ring", self.__cb_file_autolock)
-        self.undoqueue.connect("changed", lambda w: self.__state_undo(self.undoqueue.get_undo_action(),
-                                                                      self.undoqueue.get_redo_action()))
+        # ToDo: fixme
+        # self.datafile.connect("changed", lambda w, f: self.__state_file(f))
+        # self.datafile.connect("content-changed", self.__cb_file_content_changed)
+        # self.entryclipboard.connect("content-toggled", lambda w, d: self.__state_clipboard(d))
+        # self.locktimer.connect("ring", self.__cb_file_autolock)
+        # self.undoqueue.connect("changed", lambda w: self.__state_undo(self.undoqueue.get_undo_action(),
+        #                                                               self.undoqueue.get_redo_action()))
 
         # check if configuration is updated, install schema if not
-        if self.__check_config() == False:
-
-            if config.install_schema("%s/revelation.schemas" % config.DIR_GCONFSCHEMAS) == False:
-                raise config.ConfigError
-
-            self.config.client.clear_cache()
-
-            if self.__check_config() == False:
-                raise config.ConfigError
-
-        self.config.monitor("file/autolock_timeout", lambda k, v, d: self.locktimer.start(v * 60))
-
-        dialog.EVENT_FILTER = self.__cb_event_filter
+        # if self.__check_config() == False:
+        #
+        #     if config.install_schema("%s/revelation.schemas" % config.DIR_GCONFSCHEMAS) == False:
+        #         raise config.ConfigError
+        #
+        #     self.config.client.clear_cache()
+        #
+        #     if self.__check_config() == False:
+        #         raise config.ConfigError
+        #
+        # self.config.monitor("file/autolock_timeout", lambda k, v, d: self.locktimer.start(v * 60))
+        #
+        # dialog.EVENT_FILTER = self.__cb_event_filter
 
     # loads the glade file
     def do_activate(self):
@@ -111,7 +112,7 @@ class PyRevelationApplication(Gtk.Application):
                     raise dialog.CancelError
 
             if file is None:
-                open_file_selector_dialog = dialog.OpenFileSelector(self)
+                open_file_selector_dialog = dialog.OpenFileSelector(self.window)
                 response = open_file_selector_dialog.run()
                 if response == Gtk.ResponseType.OK:
                     file = dialog.get_filename()

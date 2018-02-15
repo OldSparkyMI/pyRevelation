@@ -116,7 +116,7 @@ class OpenFileSelector(Gtk.FileChooserDialog):
     """A file selector for opening files"""
 
     def __init__(self, window):
-        super().__init__(title=_("Please choose a revelation file"), parent=window, action=Gtk.FileChooserAction.OPEN)
+        super().__init__(title=_("Please choose a revelation file"), transient_for=window, action=Gtk.FileChooserAction.OPEN)
         self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OPEN, Gtk.ResponseType.OK)
 
         self.set_default_size(800, 400)
@@ -126,7 +126,7 @@ class OpenFileSelector(Gtk.FileChooserDialog):
         filter_text.add_mime_type("application/x-revelation")
         self.add_filter(filter_text)
 
-        filter_py = Gtk.FileFilter()
-        filter_py.set_name(_('All files'))
-        filter_py.add_mime_type("*")
-        self.add_filter(filter_py)
+        filter_any = Gtk.FileFilter()
+        filter_any.set_name(_('All files'))
+        filter_any.add_pattern("*")
+        self.add_filter(filter_any)

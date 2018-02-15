@@ -103,7 +103,7 @@ class PyRevelationApplication(Gtk.Application):
     def do_startup(self):
         Gtk.Application.do_startup(self)
 
-    def file_open(self, file = None, password = None):
+    def file_open(self, file=None, password=None):
         """Opens a data file"""
 
         try:
@@ -115,7 +115,7 @@ class PyRevelationApplication(Gtk.Application):
                 open_file_selector_dialog = dialog.OpenFileSelector(self.window)
                 response = open_file_selector_dialog.run()
                 if response == Gtk.ResponseType.OK:
-                    file = dialog.get_filename()
+                    file = open_file_selector_dialog.get_filename()
                 elif response == Gtk.ResponseType.CANCEL:
                     pass
                 open_file_selector_dialog.destroy()

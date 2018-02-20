@@ -103,3 +103,4 @@ ENV/
 # self added
 /pyRevelation.iml
 /.idea/
+!/src/lib/

@@ -23,6 +23,7 @@
 import os.path
 import re
 from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gio
 from src import datahandler
 
@@ -85,7 +86,7 @@ class DataFile(GObject.GObject):
         return self.__password
 
     def load(self, file, password=None, pwgetter=None):
-        "Loads a file"
+        """Loads a file"""
 
         file = file_normpath(file)
         data = file_read(file)
@@ -106,7 +107,7 @@ class DataFile(GObject.GObject):
         return entrystore
 
     def save(self, entrystore, file, password=None):
-        "Saves an entrystore to a file"
+        """Saves an entrystore to a file"""
 
         self.__monitor_stop()
         file_write(file, self.__handler.export_data(entrystore, password))
@@ -197,21 +198,25 @@ def file_normpath(file):
 
 
 def file_read(file):
-    "Reads data from a file"
+    """Reads data from a file"""
 
     try:
         if file is None:
             raise IOError
 
-        contents, length, etag = Gio.File(file).load_contents()
-        return contents
+        # https://lazka.github.io/pgi-docs/#Gio-2.0/classes/File.html#Gio.File.new_for_path
+        # ToDo: Returns: a new Gio.File for the given path. Free the returned object with GObject.Object.unref().
+        success, contents, etag = Gio.File.new_for_path(file).load_contents()
 
-    except Gio.Error:
+        # ToDo: why is this latin-1 here?
+        return contents.decode("latin-1")
+
+    except GLib.GError:
         raise IOError
 
 
 def file_write(file, data):
-    "Writes data to file"
+    """Writes data to file"""
 
     try:
         if file is None:

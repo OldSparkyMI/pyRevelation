@@ -31,10 +31,12 @@ from gettext import gettext as _
 from src.dialog import dialog
 from src.lib import data
 from src.lib import config
+from src.lib import entry
 from src.lib import io
 from src import datahandler
 from src.lib import ui
 import sys
+import os
 
 
 # TODO: One last thing. It's important to understand that Python's gettext module only handles Python strings, and other subsystems may be involved. The classic example is GObject Introspection, the newest and recommended interface to the GNOME Object system. If your Python-GI based project needs to translate strings too (e.g. in menus or other UI elements), you'll have to use both the gettext API for your Python strings, and set the locale for the C-based bits using locale.setlocale(). This is because Python's API does not set the locale automatically, and Python-GI exposes no other way to control the language it uses for translations.
@@ -138,8 +140,72 @@ class PyRevelationApplication(Gtk.Application):
 
     def __file_load(self, file, password, datafile=None):
         """Loads data from a data file into an entrystore"""
-        print("Implement me: __file_load")
-        return None
+
+        # We may need to change the datahandler
+        old_handler = None
+
+        try:
+            if datafile is None:
+                datafile = self.datafile
+
+                # Because there are two fileversion we need to check if we are really dealing
+                # with version two. (This is deprecated)<<< The chances are low, that we are
+                # dealing with version one. In this case we use the version one
+                # handler and save the file as version two if it is changed, to
+                # allow seemless upgrades.>>>
+                if datafile.get_handler().detect(io.file_read(file)) is not True:
+                    # Store the datahandler to be reset later on
+                    old_handler = datafile.get_handler()
+                    # Load the revelation fileversion one handler
+                    datafile.set_handler(datahandler.Revelation)
+                    dialog.Info(self, _('Old file format'), _(
+                        'Revelation detected that \'%s\' file has the old and actually non-secure file format. It is '
+                        'strongly recommended to save this file with the new format. Revelation will do it '
+                        'automatically if you press save after opening the file.') % file).run()
+
+            while 1:
+                try:
+                    result = datafile.load(file, password,
+                                           lambda: dialog.PasswordOpen(self, os.path.basename(file)).run())
+                    break
+
+                except datahandler.PasswordError:
+                    dialog.Error(self, _('Incorrect password'),
+                                 _('The password you entered for the file \'%s\' was not correct.') % file).run()
+
+        except datahandler.FormatError:
+            self.statusbar.set_status(_('Open failed'))
+            dialog.Error(self, _('Invalid file format'), _('The file \'%s\' contains invalid data.') % file).run()
+
+        except (datahandler.DataError, entry.EntryTypeError, entry.EntryFieldError):
+            self.statusbar.set_status(_('Open failed'))
+            dialog.Error(self, _('Unknown data'), _(
+                'The file \'%s\' contains unknown data. It may have been created by a newer version of Revelation.')
+                         % file).run()
+
+        except datahandler.VersionError:
+            self.statusbar.set_status(_('Open failed'))
+            dialog.Error(self, _('Unknown data version'), _(
+                'The file \'%s\' has a future version number, please upgrade Revelation to open it.') % file).run()
+
+        except datahandler.DetectError:
+            self.statusbar.set_status(_('Open failed'))
+            dialog.Error(self, _('Unable to detect filetype'), _(
+                'The file type of the file \'%s\' could not be automatically detected. Try specifying the file type '
+                'manually.') % file).run()
+
+        except IOError:
+            self.statusbar.set_status(_('Open failed'))
+            dialog.Error(self, _('Unable to open file'), _(
+                'The file \'%s\' could not be opened. Make sure that the file exists, and that you have permissions '
+                'to open it.') % file).run()
+
+        # If we switched the datahandlers before we need to switch back to the
+        # version2 handler here, to ensure a seemless version upgrade on save
+        if old_handler is not None:
+            datafile.set_handler(old_handler.__class__)
+
+        return result
 
 
 if __name__ == "__main__":

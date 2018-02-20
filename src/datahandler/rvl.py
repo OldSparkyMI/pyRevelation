@@ -396,7 +396,7 @@ class Revelation2(RevelationXML):
         return header
 
     def __parse_header(self, header):
-        "Parses a data header, returns the data version"
+        """Parses a data header, returns the data version"""
 
         if header is None:
             raise base.FormatError
@@ -416,7 +416,7 @@ class Revelation2(RevelationXML):
         return ord(match.group(1))
 
     def check(self, input):
-        "Checks if the data is valid"
+        """Checks if the data is valid"""
 
         if input is None:
             raise base.FormatError
@@ -430,7 +430,7 @@ class Revelation2(RevelationXML):
             raise base.VersionError
 
     def detect(self, input):
-        "Checks if the handler can guarantee to use the data"
+        """Checks if the handler can guarantee to use the data"""
 
         try:
             self.check(input)

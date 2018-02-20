@@ -43,7 +43,7 @@ class Message(Gtk.Window):
         self.add(box)
 
         # set up image
-        if stockimage != None:
+        if stockimage is not None:
             pass
             #image = ui.Image(stockimage, Gtk.IconSize.DIALOG)
             #image.set_alignment(0.5, 0)
@@ -57,7 +57,6 @@ class Message(Gtk.Window):
         #label.set_alignment(0, 0)
         #label.set_selectable(True)
         #self.contents.pack_start(label)
-
 
     def run(self):
         """Displays the dialog"""

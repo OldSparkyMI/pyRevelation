@@ -91,12 +91,12 @@ class DataFile(GObject.GObject):
         file = file_normpath(file)
         data = file_read(file)
 
-        if self.__handler == None:
+        if self.__handler is None:
             self.__handler = datahandler.detect_handler(data)()
 
         self.__handler.check(data)
 
-        if self.__handler.encryption == True and password is None and pwgetter != None:
+        if self.__handler.encryption is True and password is None and pwgetter is not None:
             password = pwgetter()
 
         entrystore = self.__handler.import_data(data, password)

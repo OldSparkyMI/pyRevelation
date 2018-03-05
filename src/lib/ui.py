@@ -26,6 +26,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 from src.lib import config
+from src.lib import util
 from gettext import gettext as _
 
 
@@ -140,7 +141,7 @@ STOCK_ITEMS = (
 ##### EXCEPTIONS #####
 
 class DataError(Exception):
-    "Exception for invalid data"
+    """Exception for invalid data"""
     pass
 
 
@@ -191,7 +192,7 @@ def config_bind(cfg, key, widget, data=None):
 
 
 def generate_field_display_widget(field, cfg=None, userdata=None):
-    "Generates a widget for displaying a field value"
+    """Generates a widget for displaying a field value"""
 
     if field.datatype == entry.DATATYPE_EMAIL:
         widget = LinkButton("mailto:%s" % field.value, util.escape_markup(field.value))
@@ -210,7 +211,7 @@ def generate_field_display_widget(field, cfg=None, userdata=None):
 
 
 def generate_field_edit_widget(field, cfg=None, userdata=None):
-    "Generates a widget for editing a field"
+    """Generates a widget for editing a field"""
 
     if type(field) == entry.PasswordField:
         widget = PasswordEntryGenerate(None, cfg, userdata)
@@ -400,24 +401,24 @@ class InputSection(VBox):
             self.pack_start(self.desc, False)
 
         if sizegroup is None:
-            self.sizegroup = Gtk.SizeGroup(Gtk.SIZE_GROUP_HORIZONTAL)
+            self.sizegroup = Gtk.SizeGroup(mode=Gtk.SizeGroupMode.HORIZONTAL)
 
     def append_widget(self, title, widget, indent=True):
-        "Adds a widget to the section"
+        """Adds a widget to the section"""
 
         row = HBox()
         row.set_spacing(12)
-        self.pack_start(row, False, False)
+        self.pack_start(row, False, False, 10)
 
-        if self.title is not None and indent == True:
+        if self.title is not None and indent is True:
             row.pack_start(Label(""), False, False)
 
         if title is not None:
             label = Label("%s:" % util.escape_markup(title))
             self.sizegroup.add_widget(label)
-            row.pack_start(label, False, False)
+            row.pack_start(label, False, False, 10)
 
-        row.pack_start(widget)
+        row.pack_start(widget, False, False, 10)
 
     def clear(self):
         "Removes all widgets"
@@ -486,7 +487,7 @@ class ImageLabel(HBox):
 
 
 class Label(Gtk.Label):
-    "A text label"
+    """A text label"""
 
     def __init__(self, text=None, justify=Gtk.Justification.LEFT):
         Gtk.Label.__init__(self)
@@ -496,23 +497,22 @@ class Label(Gtk.Label):
         self.set_use_markup(True)
         self.set_line_wrap(True)
 
-        if justify == Gtk.JUSTIFY_LEFT:
+        if justify == Gtk.Justification.LEFT:
             self.set_alignment(0, 0.5)
 
-        elif justify == Gtk.JUSTIFY_CENTER:
+        elif justify == Gtk.Justification.CENTER:
             self.set_alignment(0.5, 0.5)
 
-        elif justify == Gtk.JUSTIFY_RIGHT:
+        elif justify == Gtk.Justification.RIGHT:
             self.set_alignment(1, 0.5)
 
     def set_text(self, text):
-        "Sets the text of the label"
+        """Sets the text of the label"""
 
         if text is None:
-            Gtk.Label.set_text(self, "")
-
+            self.set_text("")
         else:
-            Gtk.Label.set_markup(self, text)
+            self.set_markup(text)
 
 
 class PasswordLabel(EventBox):
@@ -1829,7 +1829,7 @@ class EntryView(VBox):
         metabox.pack_start(Alignment(label, 0.5, 0.5, 0, 0))
 
         label = Label("<span weight=\"bold\">%s</span>%s" % (
-            e.typename + (e.description != "" and ": " or ""), util.escape_markup(e.description)), Gtk.JUSTIFY_CENTER)
+            e.typename + (e.description != "" and ": " or ""), util.escape_markup(e.description)), Gtk.Justification.CENTER)
         metabox.pack_start(label)
 
         # set up field list
@@ -1848,7 +1848,7 @@ class EntryView(VBox):
 
         # notes
         label = Label("<span weight=\"bold\">%s</span>%s" % ((e.notes != "" and _("Notes: ") or ""),
-                                                             util.escape_markup(e.notes)), Gtk.JUSTIFY_LEFT)
+                                                             util.escape_markup(e.notes)), Gtk.Justification.LEFT)
         self.pack_start(label)
 
         # display updatetime
@@ -1856,7 +1856,7 @@ class EntryView(VBox):
             label = Label((_('Updated %s ago') + "\n%s") % (util.time_period_rough(e.updated, time.time()),
                                                             time.strftime("%Y-%m-%d %H:%M:%S",
                                                                           time.localtime(e.updated))),
-                          Gtk.JUSTIFY_CENTER)
+                          Gtk.Justification.CENTER)
             self.pack_start(label)
 
         self.show_all()

@@ -43,27 +43,18 @@ class Message(Gtk.Dialog):
 
         self.add_buttons(*buttons)
 
-        box = Gtk.HBox(spacing=12)
-        self.add(box)
-
         # set up image
         if stockimage is not None:
             pass
             # image = ui.Image(stockimage, Gtk.IconSize.DIALOG)
             # image.set_alignment(0.5, 0)
-            # box.pack_start(image, False, False)
-
-        # set up message
-        self.contents = Gtk.HBox(spacing=10)
-        box.pack_start(self.contents, False, False, 10)
+            # self.vbox.pack_start(image, False, False)
 
         label = ui.Label("<span size=\"larger\" weight=\"bold\">%s</span>\n\n%s" % (util.escape_markup(title), text))
         label.set_alignment(0, 0)
         label.set_selectable(True)
-        self.contents.pack_start(label, False, False, 10)
 
-        label = Gtk.Label("This is a dialog to display additional information")
-        box.add(label)
+        self.vbox.pack_start(label, False, False, 12)
 
     def run(self):
         """Displays the dialog"""
@@ -178,7 +169,7 @@ class Password(Message):
         self.entries = []
 
         self.sect_passwords = ui.InputSection()
-        self.contents.pack_start(self.sect_passwords, False, False, 10)
+        self.vbox.pack_start(self.sect_passwords, False, False, 10)
 
     def add_entry(self, name, entry=None):
         """Adds a password entry to the dialog"""

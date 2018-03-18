@@ -1862,7 +1862,7 @@ class EntryView(VBox):
         self.show_all()
 
     def pack_start(self, widget):
-        "Adds a widget to the data view"
+        """Adds a widget to the data view"""
 
         alignment = Alignment(widget, 0.5, 0.5, 0, 0)
         VBox.pack_start(self, alignment, False, False)

@@ -34,7 +34,7 @@ from io import StringIO
 from xml.parsers.expat import ExpatError
 
 from Crypto.Cipher import AES
-from src.lib import PBKDF2
+from src.lib.PBKDF2 import PBKDF2
 from src.bundle import luks
 
 from src.lib import config, data, entry
@@ -476,7 +476,7 @@ class Revelation2(RevelationXML):
         return data
 
     def import_data(self, input, password):
-        "Imports data into an entrystore"
+        """Imports data into an entrystore"""
 
         # check and pad password
         if password is None:

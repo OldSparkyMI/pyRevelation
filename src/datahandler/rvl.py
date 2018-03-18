@@ -401,6 +401,7 @@ class Revelation2(RevelationXML):
         if header is None:
             raise base.FormatError
 
+        # ToDo: is .decode('utf-8') always right here?
         match = re.match("""
 			^			# start of header
 			rvl\x00			# magic string
@@ -408,7 +409,7 @@ class Revelation2(RevelationXML):
 			\x00			# separator
 			(.{3})			# app version
 			\x00\x00\x00		# separator
-		""", header, re.VERBOSE)
+		""", header.decode('utf-8'), re.VERBOSE)
 
         if match is None:
             raise base.FormatError
@@ -509,14 +510,15 @@ class Revelation2(RevelationXML):
             raise base.PasswordError
 
         # decompress data
-        padlen = ord(data[-1])
+        padlen = data[-1]
         for i in data[-padlen:]:
-            if ord(i) != padlen:
+            if i != padlen:
                 raise base.FormatError
 
-        data = zlib.decompress(data[0:-padlen])
+        data = zlib.decompress(data[0:-padlen]).decode("utf-8")
 
         # check and import data
+        print(data.strip()[:5])
         if data.strip()[:5] != "<?xml":
             raise base.FormatError
 

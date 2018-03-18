@@ -208,8 +208,7 @@ def file_read(file):
         # ToDo: Returns: a new Gio.File for the given path. Free the returned object with GObject.Object.unref().
         success, contents, etag = Gio.File.new_for_path(file).load_contents()
 
-        # ToDo: why is this latin-1 here?
-        return contents.decode("latin-1")
+        return contents
 
     except GLib.GError:
         raise IOError

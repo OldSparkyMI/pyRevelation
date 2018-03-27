@@ -164,13 +164,15 @@ def file_is_local(file):
 
 
 def file_monitor(file, callback):
-    "Starts monitoring a file"
+    """Starts monitoring a file"""
 
     try:
-        handle = Gio.File(file).monitor_file()
+        # https://lazka.github.io/pgi-docs/#Gio-2.0/classes/File.html#Gio.File.new_for_path
+        # ToDo: Returns: a new Gio.File for the given path. Free the returned object with GObject.Object.unref().
+        handle = Gio.File.new_for_path(file).monitor_file(Gio.FileMonitorFlags.NONE, None)
         handle.connect('changed', callback)
         return handle
-    except Gio.Error:
+    except GLib.GError:
         return None
 
 

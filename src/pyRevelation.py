@@ -132,7 +132,7 @@ class PyRevelationApplication(Gtk.Application):
             self.entrystore.changed = False
             self.undoqueue.clear()
 
-            self.file_locked = False;
+            self.file_locked = False
             self.statusbar.set_status(_('Opened file %s') % self.datafile.get_file())
 
         except dialog.CancelError:

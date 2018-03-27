@@ -110,13 +110,13 @@ def check_password(password):
 
 
 def dom_text(node):
-    "Returns text content of a DOM node"
+    """Returns text content of a DOM node"""
 
     text = ""
 
     for child in node.childNodes:
         if child.nodeType == node.TEXT_NODE:
-            text += child.nodeValue.encode("utf-8")
+            text += child.nodeValue
 
     return text
 

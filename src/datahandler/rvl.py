@@ -518,7 +518,6 @@ class Revelation2(RevelationXML):
         data = zlib.decompress(data[0:-padlen]).decode("utf-8")
 
         # check and import data
-        print(data.strip()[:5])
         if data.strip()[:5] != "<?xml":
             raise base.FormatError
 

@@ -53,7 +53,9 @@ class PyRevelationApplication(Gtk.Application):
         Gtk.Application.__init__(self)
 
     def __init_pyRevelationApplication(self):
-        self.statusbar = self.builder.get_object('statusbar1')
+        self.statusbar = self.builder.get_object('statusbar1')  # Gtk.Statusbar
+        self.statusbar.__class__ = ui.Statusbar                 # cast to ui.Statusbar
+        self.statusbar.__init__()                               # run init, to initialize the context
 
     def __init_facilities(self):
         """Sets up various facilities"""
@@ -139,8 +141,7 @@ class PyRevelationApplication(Gtk.Application):
             self.undoqueue.clear()
 
             self.file_locked = False
-
-            self.statusbar.push(self.statusbar.get_context_id("pyRevelation"), _('Opened file %s') % self.datafile.get_file())
+            self.statusbar.set_status(_('Opened file %s') % self.datafile.get_file())
 
         except dialog.CancelError:
             self.statusbar.set_status(_('Open cancelled'))

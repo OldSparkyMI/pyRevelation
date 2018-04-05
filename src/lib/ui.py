@@ -1462,19 +1462,19 @@ class EntryTree(TreeView):
 
 
 class Statusbar(Gtk.Statusbar):
-    "An application statusbar"
+    """An application statusbar"""
 
     def __init__(self):
         Gtk.Statusbar.__init__(self)
         self.contextid = self.get_context_id("statusbar")
 
     def clear(self):
-        "Clears the statusbar"
+        """Clears the statusbar"""
 
         self.pop(self.contextid)
 
     def set_status(self, text):
-        "Displays a text in the statusbar"
+        """Displays a text in the statusbar"""
 
         self.clear()
         self.push(self.contextid, text)
